@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Word Guessing Game</title>
+  <style>
+   
+    body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 50px;
+  background-image: url('pic.jpg');
+  
+  background-size: cover; 
+  background-position: center center; 
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh; 
+  margin: 0;
+}
+
+
+  .container {
+  background-color: rgba(255, 255, 255, 0.1); 
+  backdrop-filter: blur(1px); /
+  padding: 30px;
+  border-radius: 30px;
+  display: inline-block;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  color:#E6E6FA;
+}
+
+
+    input[type="text"] {
+  padding: 10px;
+  width: 200px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  color: #E6E6FA; /* This changes the color of the text you type */
+  background-color: rgba(255, 255, 255, 0.2); /* Optional: makes input slightly transparent */
+}
+
+input::placeholder {
+  color: #E6E6FA;
+  opacity: 0.6; 
+}
+
+
+    button {
+      padding: 10px 15px;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      background-color: #B284BE;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #8e24aa;
+    }
+
+    #hint, #message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .win {
+      background-color: #B284BE !important;
+    }
+
+    .lose {
+      background-color: #B284BE !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Word Guessing Game</h1>
+    <p>Guess the secret word!</p>
+    <input type="text" id="guessInput" placeholder="Enter your guess" />
+    <button id="submitBtn">Submit</button>
+    <button id="restartBtn">Restart</button>
+    <div id="hint"></div>
+    <div id="message"></div>
+  </div>
+
+  <!-- Embedded JavaScript -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const words = ["apple", "banana", "grape", "orange", "mango", "peach", "kiwi"];
+      let secretWord, attemptsLeft;
+
+      const inputElement = document.getElementById("guessInput");
+      const messageElement = document.getElementById("message");
+      const hintElement = document.getElementById("hint");
+      const submitButton = document.getElementById("submitBtn");
+      const restartButton = document.getElementById("restartBtn");
+
+      function startGame() {
+        secretWord = words[Math.floor(Math.random() * words.length)];
+        attemptsLeft = 5;
+        messageElement.textContent = "";
+        hintElement.textContent = `Hint: The word starts with '${secretWord.charAt(0).toUpperCase()}'`;
+        inputElement.value = "";
+        inputElement.disabled = false;
+        document.body.className = "";
+        console.log("New secret word:", secretWord); // For testing
+      }
+
+      function checkGuess() {
+        let userGuess = inputElement.value.trim().toLowerCase();
+
+        if (!userGuess) {
+          attemptsLeft--;
+          messageElement.textContent = `Incorrect guess. You have ${attemptsLeft} attempts left. Try again!`;
+        } else if (userGuess === secretWord) {
+          messageElement.textContent = "Congratulations! You guessed the secret word!";
+          document.body.className = "win";
+          inputElement.disabled = true;
+        } else {
+          attemptsLeft--;
+          if (attemptsLeft > 0) {
+            messageElement.textContent = `Incorrect guess. You have ${attemptsLeft} attempts left. Try again!`;
+          } else {
+            messageElement.textContent = `Game over! The secret word was '${secretWord}'.`;
+            document.body.className = "lose";
+            inputElement.disabled = true;
+          }
+        }
+
+        inputElement.value = "";
+        inputElement.focus();
+      }
+
+      inputElement.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          checkGuess();
+        }
+      });
+
+      submitButton.addEventListener("click", checkGuess);
+      restartButton.addEventListener("click", startGame);
+
+      startGame();
+    });
+  </script>
+</body>
+</html>
+
+
